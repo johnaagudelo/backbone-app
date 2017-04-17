@@ -1,5 +1,5 @@
 var express = require('express'), 
-	swig    = require('swig'), // templetes
+	swig    = require('swig'), // templetes server
 	cons    = require('consolidate'), //unir templetes con express
 	fs      = require('fs'),
 	uuid    = require('node-uuid'); //crear id unicos

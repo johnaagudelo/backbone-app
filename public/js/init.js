@@ -6,7 +6,7 @@ App.Collections = {};
 App.Models = {};
 App.Router = {};
 
-//Mantener las definicones de la aplicacion
+//Mantener las definicones de la aplicacion (Objetos en tiempior de jecucion de la app) 
 window.app = {};
 window.routers = {};
 window.plugs = {};
