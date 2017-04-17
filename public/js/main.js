@@ -14,5 +14,11 @@ $(document).ready(function(){
 		data.forEach(function(item) {
 			window.collections.articles.add(item);
 		});
+
+		Backbone.history.start({
+			root: '/',
+			pushState: true,
+			silent: false 
+		})
 	})
 });
