@@ -4,7 +4,7 @@ window.App = {};
 App.Views = {};
 App.Collections = {};
 App.Models = {};
-App.Router = {};
+App.Routers = {};
 
 //Mantener las definicones de la aplicacion (Objetos en tiempior de jecucion de la app) 
 window.app = {};

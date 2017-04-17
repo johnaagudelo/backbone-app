@@ -14,7 +14,7 @@ App.Views.ArticleView = Backbone.View.extend({
 		this.template = Handlebars.compile($("#entry-template").html());
 	},
 	navigate: function(ev){
-		console.log(this.model.toJSON())
+		Backbone.history.navigate('article/'+ this.model.get('id'), { trigger: true });
 	},
 	upvote: function(ev){
 		ev.stopPropagation();
