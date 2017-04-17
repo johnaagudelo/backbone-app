@@ -2,8 +2,7 @@ $(document).ready(function(){
 	console.log('Starting app');
 
 	window.collections.articles = new App.Collections.ArticleCollection();
-	window.routers.base = new App.Routers.BaseRouter();
-
+	window.routers = new App.Routers.BaseRouter();
 	window.collections.articles.on('add', function(model){
 		var view = new App.Views.ArticleView(model);
 		view.render();
@@ -18,8 +17,8 @@ $(document).ready(function(){
 
 		Backbone.history.start({
 			root: '/',
-			pushState: true,
-			silent: false 
+			pushState: false,
+			silent: true 
 		})
 	})
 });

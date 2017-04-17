@@ -3,17 +3,16 @@ App.Routers.BaseRouter = Backbone.Router.extend({
 		"" :  "root",
 		"article/:id": "articleSingle"
 	},
-	initialize : function(){
-		let self = this;
-	},
 	root: function(){
 		let self = this;
 		
-		$('#contenido > div').show();
+		window.app.state = "root"
 	},
 	articleSingle: function(id){
 		let self = this;
+
 		$('#contenido > div').hide();
-		$('#contenido #'+id).show();
+		window.app.state = "articleSingle"
+		window.app.article = id;
 	}
 });

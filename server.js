@@ -25,9 +25,6 @@ app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.methodOverride());
 
-// Static files
-app.use( express.static('./public') );
-
 // Routes
 app.get('/articles/all', function(req, res){
 	res.send(data);
@@ -74,5 +71,7 @@ var home = function (req, res) {
 app.get('/', home);
 app.get('/article/:id', home);
 
+// Static files
+app.use( express.static('./public') );
 
 server.listen(3000);
