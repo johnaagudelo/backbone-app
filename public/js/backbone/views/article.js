@@ -6,17 +6,19 @@ App.Views.ArticleView = Backbone.View.extend({
 	initialize : function(model){
 		let self = this;
 		this.model = model;
-		//this.template = _.template($("#Article_tpl").html());
 		this.model.on('change', function(){
 			self.render();
 		})
+		this.template = Handlebars.compile($("#entry-template").html());
 	},
-	render: function(data) {
-		//var self = this;
-		//var locals ={};
-
-		//this.$el.html(this.template({data:locals}));
-		this.$el.html( `<h3>${ this.model.get("title") }</h3><p>${ this.model.get("tag") }</p>` );
+	render: function() {
+		var self = this;
+		var locals = {
+			post: this.model.collection.toJSON()[0]
+		}
+		
+		this.$el.html(this.template(locals));
+		//this.$el.html( `<h3>${ this.model.get("title") }</h3><p>${ this.model.get("tag") }</p>` );
 
 		return this;
 	}
