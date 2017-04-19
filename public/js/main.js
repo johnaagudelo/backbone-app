@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	console.log('Starting app');
-
+	window.views.articleNew = new App.Views.ArticleNewView($('#contenido aside'));
 	window.collections.articles = new App.Collections.ArticleCollection();
 	window.routers = new App.Routers.BaseRouter();
 	window.collections.articles.on('add', function(model){

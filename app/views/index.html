@@ -24,6 +24,7 @@
     <script src="js/backbone/models/article.js"></script>
     <script src="js/backbone/collections/article.js"></script>
     <script src="js/backbone/views/article.js"></script>
+    <script src="js/backbone/views/articleNew.js"></script>
     <script src="js/backbone/routers/base.js"></script>
 </head>
 
@@ -56,13 +57,20 @@
         <aside>
             <div id="aside_header">
                 <span aria-hidden="true" class="icon-arrow-down"></span>
-                <h3>Alorium menu plus</h3>
+                <h3>New article</h3>
             </div>
             <div id="aside_body">
                 <p>
-                    Cum horribilem walking dead resurgere de crazed sepulcris creaturis, zombie sicut de grave feeding iride et serpens. Pestilentia,
-                    shaun ofthe dead scythe animated corpses ipsa screams. Pestilentia est plague haec decaying ambulabat
-                    mortuos. Sicut zeder apathetic malus voodoo.
+                   <input id="title" type="text" placeholder="Titulo" />
+                </p>
+                 <p>
+                   <input id="tag" type="text" placeholder="Tag" />
+                </p>
+                 <p>
+                   <input id="content" type="text" placeholder="Contenido" />
+                </p>
+                 <p>
+                   <button id="create">Crear</button>
                 </p>
             </div>
         </aside>
