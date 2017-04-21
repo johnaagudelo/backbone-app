@@ -1,5 +1,5 @@
 App.Models.ArticleModel = Backbone.Model.extend({
-	url:"",
+	url:"/articles",
 	defaults:{
 
 	},

@@ -30,11 +30,16 @@ app.get('/articles/all', function(req, res){
 	res.send(data);
 });
 
+io.on('connection', function(socket){
+  console.log('a user connected');
+});
+
 app.post('/articles', function (req, res){
+	console.log(req.body);
 	req.body.id = uuid.v1();
 	req.body.votes = 0;
 	req.body.image = "/img/img3.jpg";
-	req.body.user  = "Siedrix";
+	req.body.user  = "john agudelo";
 
 	data.push(req.body);
 

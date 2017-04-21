@@ -1,5 +1,11 @@
 $(document).ready(function(){
 	console.log('Starting app');
+	let socket = io(window.location.origin);
+
+	socket.on('articles::create', function(article){
+		window.collections.articles.add(articleNew);
+	});
+	
 	window.views.articleNew = new App.Views.ArticleNewView($('#contenido aside'));
 	window.collections.articles = new App.Collections.ArticleCollection();
 	window.routers = new App.Routers.BaseRouter();

@@ -14,16 +14,12 @@ App.Views.ArticleNewView = Backbone.View.extend({
 		let content = this.$el.find('#content').val();
 
 		let articleNew = new App.Models.Article({
-			id: "ba022fda",
-			image: "img/img4.jpg",
 			title: title,
-			user  : "Jonh Agudelo",
 			tag: tag,
-			votes : "0",
 			content: content
 		})
 
-		window.collections.articles.add(articleNew);
+		articleNew.save();
 
 		this.$el.find('#title').val("");
 		this.$el.find('#tag').val("");
