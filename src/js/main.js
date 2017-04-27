@@ -3,7 +3,7 @@ $(document).ready(function(){
 	let socket = io(window.location.origin);
 
 	socket.on('articles::create', function(article){
-		window.collections.articles.add(articleNew);
+		window.collections.articles.add(article);
 	});
 	
 	window.views.articleNew = new App.Views.ArticleNewView($('#contenido aside'));

@@ -5,7 +5,15 @@ app en backbone y handlebars
 
 Install
 
-	npm install 
+	npm install
+
+Run APP
+
+	gulp build
+
+Run APP
+
+	
 
 ### Interesting links
 
@@ -13,4 +21,4 @@ Install
 [Handlebars](http://handlebarsjs.com/)
 [Tutorial de backbone](https://github.com/addyosmani/backbone-fundamentals/blob/gh-pages/backbone-fundamentals.md)
 [Backbone generate](https://github.com/posabsolute/backbone_generate)
-[Grunt.js](http://gruntjs.com/getting-started)
+[Gulp.js](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md)

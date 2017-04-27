@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html class="no-js">
+
+<head>
+    <meta charset="utf-8">
+    <title>BakboneApp</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <link rel="stylesheet" href="css/normalize.min.css">
+    <link rel="stylesheet" href="css/estilos.css">
+
+    <script src="./vendor/modernizr-2.6.2.min.js"></script>
+    <script src="./vendor/jquery-1.9.1.min.js"></script>
+    <script src="./vendor/underscore.js"></script>
+    <script src="./vendor/backbone.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+    <!-- engine de templete -->
+    <script src="./vendor/handlebars-v4.0.5.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <figure id="header_logo">
+            <a href=""><img src="img/logo.png" alt="logo"></a>
+        </figure>
+        <div id="header_titulo">
+            <h2>BackboneApp</h2>
+            <nav>
+                <ul>
+                    <a href="/">
+                        <li>Home</li>
+                    </a>
+                    <a href="https://github.com/johnaagudelo/backbone-app">
+                        <li>GitHub</li>
+                    </a>
+                </ul>
+            </nav>
+        </div>
+        <figure id="header_user">
+            <a href=""><img src="https://yt3.ggpht.com/-MdGZMUQDdU8/AAAAAAAAAAI/AAAAAAAAAAA/z7xiTW6mTj0/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"></a>
+        </figure>
+    </header>
+
+    <section id="contenido">
+
+        <aside>
+            <div id="aside_header">
+                <span aria-hidden="true" class="icon-arrow-down"></span>
+                <h3>New article</h3>
+            </div>
+            <div id="aside_body">
+                <p>
+                   <input id="title" type="text" placeholder="Titulo" />
+                </p>
+                 <p>
+                   <input id="tag" type="text" placeholder="Tag" />
+                </p>
+                 <p>
+                   <input id="content" type="text" placeholder="Contenido" />
+                </p>
+                 <p>
+                   <button id="create">Crear</button>
+                </p>
+            </div>
+        </aside>
+
+        {% raw %}
+        <script id="entry-template" type="text/x-handlebars-template">
+            <article class="contenido_item">
+                <figure>
+                    <a href="#!"><img src="{{ post.image }}"></a>
+                </figure>
+                <div class="item_info">
+                    <h2>{{ post.title }}</h2>
+                    <p class="item_posted">Posted by <a href="#!">{{ post.user }}</a></p>
+                    <span aria-hidden="true" class="icon-heart-2"></span>
+                </div>
+                <div class="item_extra">
+                    <p class="extra_tag">{{ post.tag }}</p>
+                    <div class="extra_likes">
+                        <a class="likes_up" href="#!"><span aria-hidden="true" class="icon-arrow-up"></span></a>
+                        <div class="likes_numero">{{ post.votes }}</div>
+                        <a class="likes_down" href="#!"><span aria-hidden="true" class="icon-arrow-down"></span></a>
+                    </div>
+                </div>
+            </article>
+        </script>
+
+        <script id="entry-template-extended" type="text/x-handlebars-template">
+            <article class="contenido_item extended">
+                <figure>
+                    <a href="#!"><img src="{{ post.image }}"></a>
+                </figure>
+                <div class="item_info">
+                    <h2>{{ post.title }}</h2>
+                    <p class="item_posted">Posted by <a href="#!">{{ post.user }}</a></p>
+                    <span aria-hidden="true" class="icon-heart-2"></span>
+                    <div>
+                        {{{ post.content }}}
+                    </div>
+                </div>
+                <div class="item_extra">
+                    <p class="extra_tag">{{ post.tag }}</p>
+                    <div class="extra_likes">
+                        <a class="likes_up" href="#!"><span aria-hidden="true" class="icon-arrow-up"></span></a>
+                        <div class="likes_numero">{{ post.votes }}</div>
+                        <a class="likes_down" href="#!"><span aria-hidden="true" class="icon-arrow-down"></span></a>
+                    </div>
+                </div>
+            </article>
+        </script>
+        {% endraw %}
+    </section>
+
+    <script src="./js/bundle.js"></script>
+</body>
+
+</html>
