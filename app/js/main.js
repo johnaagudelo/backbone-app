@@ -1,12 +1,18 @@
 $(document).ready(function(){
-	console.log('Starting app');
+
+	console.log('Starting app')
+	
 	let socket = io(window.location.origin);
 
 	socket.on('articles::create', function(article){
 		window.collections.articles.add(article);
 	});
 	
-	window.views.articleNew = new App.Views.ArticleNewView($('#contenido aside'));
+	viewArticleNew = new App.Views.ArticleNewView()
+	viewArticleNew.render()
+	debugger
+	$('#add-article').html(viewArticleNew.el)
+
 	window.collections.articles = new App.Collections.ArticleCollection();
 	window.routers = new App.Routers.BaseRouter();
 	window.collections.articles.on('add', function(model){

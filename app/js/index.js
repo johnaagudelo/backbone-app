@@ -5,17 +5,17 @@ require('./vendor/handlebars-v4.0.5.js')*/
 require('./init.js')
 
 // App Models
-require('./backbone/models/article.js')
+require('./models/models/article.js')
 
 //App Collections
-require('./backbone/collections/article.js')
+require('./models/collections/article.js')
 
 //App View
-require('./backbone/views/article.js')
-require('./backbone/views/articleNew.js')
+require('./models/views/article.js')
+require('./models/views/articleNew.js')
 
 //App Router
-require('./backbone/routers/base.js')
+require('./models/routers/base.js')
 
 //App
 require('./main.js')

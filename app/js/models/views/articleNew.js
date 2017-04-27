@@ -1,14 +1,19 @@
+let template = require('../../templates/articleNew.js')
+
 App.Views.ArticleNewView = Backbone.View.extend({
 	events:{
-		"click button" : "create"
+		"click button" : "create",
+		"click #aside_header": "toggle"
 	},
 	className:"",
-	initialize : function($el){
-		this.$el = $el;
-		//this.template = _.template($("#ArticleNew_tpl").html());
+	initialize : function(){
+		this.template = Handlebars.compile(template);
+	},
+	toggle: function(){
+		this.$el.find('#title').toggleClass('article-show');
 	},
 	create: function(){
-		
+		alert('create uevo articulo')
 		let title = this.$el.find('#title').val();
 		let tag = this.$el.find('#tag').val();
 		let content = this.$el.find('#content').val();
@@ -26,12 +31,7 @@ App.Views.ArticleNewView = Backbone.View.extend({
 		this.$el.find('#content').val("");
 
 	},
-	render: function(data) {
-		var self = this;
-		var locals = {};
-
-		this.$el.html(this.template({data:locals}));
-
-		return this;
+	render: function() {
+		this.$el.html(this.template());
 	}
 });

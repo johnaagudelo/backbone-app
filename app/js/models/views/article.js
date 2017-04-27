@@ -1,3 +1,6 @@
+let template = require('../../templates/article.js')
+let templeteExtend = require('../../templates/article-extended.js') 
+
 App.Views.ArticleView = Backbone.View.extend({
 	events:{
 		"click > article": "navigate",
@@ -7,7 +10,7 @@ App.Views.ArticleView = Backbone.View.extend({
 	className:"",
 	initialize : function(model){
 		let self = this;
-		this.model = model;
+		this.model = model
 
 		this.model.on('change', function(){
 			self.render();
@@ -21,8 +24,8 @@ App.Views.ArticleView = Backbone.View.extend({
 			self.render();
 		});
 
-		this.template = Handlebars.compile($("#entry-template").html());
-		this.templateExtended = Handlebars.compile($("#entry-template-extended").html());
+		this.template = Handlebars.compile(template);
+		this.templateExtended = Handlebars.compile(templeteExtend);
 	},
 	navigate: function(ev){
 		Backbone.history.navigate('article/'+ this.model.get('id'), { trigger: true });
@@ -33,9 +36,11 @@ App.Views.ArticleView = Backbone.View.extend({
 		this.model.set("votes", parseInt(votes, 10) + 1);
 	},
 	downvote: function(ev){
-		ev.stopPropagation();
-		let votes = this.model.get("votes");
-		this.model.set("votes", parseInt(votes, 10) - 1);
+		ev.stopPropagation()
+		let votes = parseInt(this.model.get("votes"), 10)
+		if(votes > 0){
+			this.model.set("votes", parseInt(votes, 10) - 1);
+		}
 	},
 	render: function() {
 		
@@ -55,7 +60,6 @@ App.Views.ArticleView = Backbone.View.extend({
 		}else{
 			this.$el.html(this.template(locals));
 		}
-		//this.$el.html( `<h3>${ this.model.get("title") }</h3><p>${ this.model.get("tag") }</p>` );
 		return this;
 	}
 });
