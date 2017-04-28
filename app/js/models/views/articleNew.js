@@ -7,6 +7,7 @@ App.Views.ArticleNewView = Backbone.View.extend({
 	},
 	className:"newArticle",
 	initialize : function(){
+		Backbone.Validation.bind(this)
 		this.template = Handlebars.compile(template);
 	},
 	toggle: function(){
@@ -23,16 +24,17 @@ App.Views.ArticleNewView = Backbone.View.extend({
 			tag: tag,
 			content: content
 		})
-
-		if(articleNew.isValid(true)){
-            // this.model.save();
-            alert('Great Success!');
-        }else{
-			alert("error");
-			articleNew.save();
+		debugger
+		console.log(articleNew.toJSON())
+		Backbone.Validation.bind(this, {model: articleNew})
+		let isValid = articleNew.isValid(true)
+		if(isValid){
+            articleNew.save();
 			this.$el.find('#title').val("");
 			this.$el.find('#tag').val("");
 			this.$el.find('#content').val("");
+		}else{
+			alert("ingrese los campos")
 		}
 	},
 	render: function() {

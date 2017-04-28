@@ -40,8 +40,10 @@ $(document).ready(function(){
 	socket.on('articles::create', function(article){
 		window.collections.articles.add(article);
 	});
-	
-	viewArticleNew = new App.Views.ArticleNewView()
+	debugger
+
+	viewArticleNew = new App.Views.ArticleNewView({ model: new App.Models.ArticleModel() })
+	Backbone.Validation.bind(viewArticleNew)
 	viewArticleNew.render()
 	$('#add-article').html(viewArticleNew.el)
 
@@ -57,8 +59,7 @@ $(document).ready(function(){
 
 	xhr.done(function(data){
 		data.forEach(function(article) {
-			let ObjArticle = new App.Models.ArticleModel(article)
-			window.collections.articles.add(ObjArticle);
+			window.collections.articles.add(new App.Models.ArticleModel(article))
 		});
 	})
 
@@ -87,15 +88,22 @@ App.Collections.ArticleCollection = Backbone.Collection.extend({
 App.Models.ArticleModel = Backbone.Model.extend({
 	url:"/articles",
 	defaults:{
-		"title": "Title",
-		"tag": "Tag",
-		"content": "Contenido"
+		title: "Title",
+		tag: "Tag",
+		content: "Contenido"
 	},
 	validation: {
 		title: {
 			required: true,
-			pattern: 'title',
 			msg: 'Ingrese un titulo'
+		},
+		tag: {
+			required: true,
+			msg: 'Ingrese un tag'
+		},
+		content: {
+			required: true,
+			msg: 'Ingrese un Contenido'
 		}
 	},
 	parse : function(resp) {
@@ -140,19 +148,15 @@ App.Views.ArticleView = Backbone.View.extend({
 	initialize : function(model){
 		let self = this;
 		this.model = model
-
 		this.model.on('change', function(){
 			self.render();
 		})
-		
 		window.routers.on('route:root', function(){
 			self.render();
 		});
-
 		window.routers.on('route:articleSingle', function(){
 			self.render();
 		});
-
 		this.template = Handlebars.compile(template);
 		this.templateExtended = Handlebars.compile(templeteExtend);
 	},
@@ -201,6 +205,7 @@ App.Views.ArticleNewView = Backbone.View.extend({
 	},
 	className:"newArticle",
 	initialize : function(){
+		Backbone.Validation.bind(this)
 		this.template = Handlebars.compile(template);
 	},
 	toggle: function(){
@@ -217,16 +222,17 @@ App.Views.ArticleNewView = Backbone.View.extend({
 			tag: tag,
 			content: content
 		})
-
-		if(articleNew.isValid(true)){
-            // this.model.save();
-            alert('Great Success!');
-        }else{
-			alert("error");
-			articleNew.save();
+		debugger
+		console.log(articleNew.toJSON())
+		Backbone.Validation.bind(this, {model: articleNew})
+		let isValid = articleNew.isValid(true)
+		if(isValid){
+            articleNew.save();
 			this.$el.find('#title').val("");
 			this.$el.find('#tag').val("");
 			this.$el.find('#content').val("");
+		}else{
+			alert("ingrese los campos")
 		}
 	},
 	render: function() {

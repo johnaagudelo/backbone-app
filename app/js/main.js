@@ -6,8 +6,10 @@ $(document).ready(function(){
 	socket.on('articles::create', function(article){
 		window.collections.articles.add(article);
 	});
-	
-	viewArticleNew = new App.Views.ArticleNewView()
+	debugger
+
+	viewArticleNew = new App.Views.ArticleNewView({ model: new App.Models.ArticleModel() })
+	Backbone.Validation.bind(viewArticleNew)
 	viewArticleNew.render()
 	$('#add-article').html(viewArticleNew.el)
 
@@ -23,8 +25,7 @@ $(document).ready(function(){
 
 	xhr.done(function(data){
 		data.forEach(function(article) {
-			let ObjArticle = new App.Models.ArticleModel(article)
-			window.collections.articles.add(ObjArticle);
+			window.collections.articles.add(new App.Models.ArticleModel(article))
 		});
 	})
 

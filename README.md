@@ -6,6 +6,7 @@ app en backbone y handlebars
 Install
 
 	npm install
+	bower install
 
 Run APP
 
