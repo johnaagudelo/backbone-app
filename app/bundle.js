@@ -4,20 +4,15 @@ require('./vendor/underscore.js')
 require('./vendor/handlebars-v4.0.5.js')*/
  
 require('./init.js')
-
 // App Models
 require('./models/models/article.js')
-
 //App Collections
 require('./models/collections/article.js')
-
 //App View
 require('./models/views/article.js')
 require('./models/views/articleNew.js')
-
 //App Router
 require('./models/routers/base.js')
-
 //App
 require('./main.js')
 },{"./init.js":2,"./main.js":3,"./models/collections/article.js":4,"./models/models/article.js":5,"./models/routers/base.js":6,"./models/views/article.js":7,"./models/views/articleNew.js":8}],2:[function(require,module,exports){
@@ -40,37 +35,37 @@ window.collections = {};
 $(document).ready(function(){
 
 	console.log('Starting app')
-	
-	let socket = io(window.location.origin);
 
+	let socket = io(window.location.origin);
 	socket.on('articles::create', function(article){
 		window.collections.articles.add(article);
 	});
 	
 	viewArticleNew = new App.Views.ArticleNewView()
 	viewArticleNew.render()
-	debugger
 	$('#add-article').html(viewArticleNew.el)
 
 	window.collections.articles = new App.Collections.ArticleCollection();
 	window.routers = new App.Routers.BaseRouter();
+
 	window.collections.articles.on('add', function(model){
 		var view = new App.Views.ArticleView(model);
 		view.render();
-		view.$el.insertAfter('#contenido aside');
+		view.$el.insertAfter('#contenido #add-article');
 	});						  
 	const xhr = $.get('/articles/all');
 
 	xhr.done(function(data){
-		data.forEach(function(item) {
-			window.collections.articles.add(item);
+		data.forEach(function(article) {
+			let ObjArticle = new App.Models.ArticleModel(article)
+			window.collections.articles.add(ObjArticle);
 		});
+	})
 
-		Backbone.history.start({
-			root: '/',
-			pushState: false,
-			silent: true 
-		})
+	Backbone.history.start({
+		root: '/',
+		pushState: false,
+		silent: true 
 	})
 });
 
@@ -78,17 +73,7 @@ $(document).ready(function(){
 App.Collections.ArticleCollection = Backbone.Collection.extend({
 
     model: App.Models.ArticleModel,
-    url: "",
-    search : function(letters){
-        if(letters == "") return this;
-        var pattern = new RegExp(letters,"gi");
-        return _(this.filter(function(data) {
-            return pattern.test(data.get("name"));
-        }));
-    },
-    comparator : function(item){
-        return item.get("name");    
-    },
+    url: "/articles/all",
     getOne : function(id){
         return this.filter(function(data) {
             return data.get("id") == id;
@@ -98,21 +83,22 @@ App.Collections.ArticleCollection = Backbone.Collection.extend({
         return resp.data;
     }
 });
-
-App.Collections.article = App.Collections.ArticleCollection;
 },{}],5:[function(require,module,exports){
 App.Models.ArticleModel = Backbone.Model.extend({
 	url:"/articles",
 	defaults:{
-
+		"title": "Title",
+		"tag": "Tag",
+		"content": "Contenido"
 	},
-	prettyDate : function(date){
-		if (!date || date === "0000-00-00 00:00:00") return "";
-		var date = Date.parse(date);
-		return date.toString("MMMM dd, yyyy")
+	validation: {
+		title: {
+			required: true,
+			pattern: 'title',
+			msg: 'Ingrese un titulo'
+		}
 	},
 	parse : function(resp) {
-		// the collection does not output same json format to models;
 		if(resp.data){
 			return resp.data;
 		}else{
@@ -120,7 +106,6 @@ App.Models.ArticleModel = Backbone.Model.extend({
 		}
 	}
 });
-App.Models.Article = App.Models.ArticleModel;
 },{}],6:[function(require,module,exports){
 App.Routers.BaseRouter = Backbone.Router.extend({
 	routes: {
@@ -151,7 +136,7 @@ App.Views.ArticleView = Backbone.View.extend({
 		"click .likes_up" : "upvote",
 		"click .likes_down" : "downvote"
 	},
-	className:"",
+	className: "article",
 	initialize : function(model){
 		let self = this;
 		this.model = model
@@ -187,12 +172,10 @@ App.Views.ArticleView = Backbone.View.extend({
 		}
 	},
 	render: function() {
-		
 		var self = this;
 		var locals = {
 			post: this.model.toJSON()
 		}
-
 		if (window.app.state == "articleSingle") {
 			if(window.app.article == this.model.get('id')){
 				this.$el.show();
@@ -214,33 +197,37 @@ let template = require('../../templates/articleNew.js')
 App.Views.ArticleNewView = Backbone.View.extend({
 	events:{
 		"click button" : "create",
-		"click #aside_header": "toggle"
+		"click #aside_header .icon-arrow-down": "toggle"
 	},
-	className:"",
+	className:"newArticle",
 	initialize : function(){
 		this.template = Handlebars.compile(template);
 	},
 	toggle: function(){
-		this.$el.find('#title').toggleClass('article-show');
+		$('.newArticle aside').toggleClass('close')
 	},
 	create: function(){
-		alert('create uevo articulo')
+		
 		let title = this.$el.find('#title').val();
 		let tag = this.$el.find('#tag').val();
 		let content = this.$el.find('#content').val();
 
-		let articleNew = new App.Models.Article({
+		let articleNew = new App.Models.ArticleModel({
 			title: title,
 			tag: tag,
 			content: content
 		})
 
-		articleNew.save();
-
-		this.$el.find('#title').val("");
-		this.$el.find('#tag').val("");
-		this.$el.find('#content').val("");
-
+		if(articleNew.isValid(true)){
+            // this.model.save();
+            alert('Great Success!');
+        }else{
+			alert("error");
+			articleNew.save();
+			this.$el.find('#title').val("");
+			this.$el.find('#tag').val("");
+			this.$el.find('#content').val("");
+		}
 	},
 	render: function() {
 		this.$el.html(this.template());
@@ -289,7 +276,7 @@ module.exports = `<article class="contenido_item">
     </div>
 </article>`
 },{}],11:[function(require,module,exports){
-module.exports = `<div>
+module.exports = `<aside>
                         <div id="aside_header">
                             <span aria-hidden="true" class="icon-arrow-down"></span>
                             <h3>New article</h3>
@@ -308,5 +295,5 @@ module.exports = `<div>
                                 <button id="create">Crear</button>
                             </p>
                         </div>
-                    </div>`
+                    </aside>`
 },{}]},{},[1])

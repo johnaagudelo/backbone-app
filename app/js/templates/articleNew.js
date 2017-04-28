@@ -1,4 +1,4 @@
-module.exports = `<div>
+module.exports = `<aside>
                         <div id="aside_header">
                             <span aria-hidden="true" class="icon-arrow-down"></span>
                             <h3>New article</h3>
@@ -17,4 +17,4 @@ module.exports = `<div>
                                 <button id="create">Crear</button>
                             </p>
                         </div>
-                    </div>`
+                    </aside>`

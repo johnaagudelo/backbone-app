@@ -5,6 +5,9 @@
   font-weight: normal;
   font-style: normal; }
 
+.close {
+  height: 48px !important; }
+
 .icon-arrow-down,
 .icon-arrow-up,
 .icon-heart,
@@ -127,7 +130,8 @@ header #header_titulo li {
 
 #contenido aside #aside_header span {
   font-size: 2em;
-  color: #84e0ef; }
+  color: #84e0ef;
+  cursor: pointer; }
 
 #contenido aside #aside_header h3 {
   color: #fff;

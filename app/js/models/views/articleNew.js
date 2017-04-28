@@ -3,33 +3,37 @@ let template = require('../../templates/articleNew.js')
 App.Views.ArticleNewView = Backbone.View.extend({
 	events:{
 		"click button" : "create",
-		"click #aside_header": "toggle"
+		"click #aside_header .icon-arrow-down": "toggle"
 	},
-	className:"",
+	className:"newArticle",
 	initialize : function(){
 		this.template = Handlebars.compile(template);
 	},
 	toggle: function(){
-		this.$el.find('#title').toggleClass('article-show');
+		$('.newArticle aside').toggleClass('close')
 	},
 	create: function(){
-		alert('create uevo articulo')
+		
 		let title = this.$el.find('#title').val();
 		let tag = this.$el.find('#tag').val();
 		let content = this.$el.find('#content').val();
 
-		let articleNew = new App.Models.Article({
+		let articleNew = new App.Models.ArticleModel({
 			title: title,
 			tag: tag,
 			content: content
 		})
 
-		articleNew.save();
-
-		this.$el.find('#title').val("");
-		this.$el.find('#tag').val("");
-		this.$el.find('#content').val("");
-
+		if(articleNew.isValid(true)){
+            // this.model.save();
+            alert('Great Success!');
+        }else{
+			alert("error");
+			articleNew.save();
+			this.$el.find('#title').val("");
+			this.$el.find('#tag').val("");
+			this.$el.find('#content').val("");
+		}
 	},
 	render: function() {
 		this.$el.html(this.template());

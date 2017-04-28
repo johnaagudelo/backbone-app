@@ -10,8 +10,11 @@ Install
 Run APP
 
 	gulp build
+	gulp bundle
 
 Run APP
+
+	npm start
 
 	
 
