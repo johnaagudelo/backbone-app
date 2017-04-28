@@ -32,12 +32,12 @@ window.views = {};
 window.collections = {};
 
 },{}],3:[function(require,module,exports){
-$(document).ready(function(){
+$(document).ready(function () {
 
 	console.log('Starting app')
 
 	let socket = io(window.location.origin);
-	socket.on('articles::create', function(article){
+	socket.on('articles::create', function (article) {
 		window.collections.articles.add(article);
 	});
 	debugger
@@ -50,15 +50,15 @@ $(document).ready(function(){
 	window.collections.articles = new App.Collections.ArticleCollection();
 	window.routers = new App.Routers.BaseRouter();
 
-	window.collections.articles.on('add', function(model){
+	window.collections.articles.on('add', function (model) {
 		var view = new App.Views.ArticleView(model);
 		view.render();
 		view.$el.insertAfter('#contenido #add-article');
-	});						  
+	});
 	const xhr = $.get('/articles/all');
 
-	xhr.done(function(data){
-		data.forEach(function(article) {
+	xhr.done(function (data) {
+		data.forEach(function (article) {
 			window.collections.articles.add(new App.Models.ArticleModel(article))
 		});
 	})
@@ -66,8 +66,27 @@ $(document).ready(function(){
 	Backbone.history.start({
 		root: '/',
 		pushState: false,
-		silent: true 
+		silent: true
 	})
+
+	_.extend(Backbone.Validation.callbacks, {
+		valid: function (view, attr, selector) {
+			debugger
+			var $el = view.$('[name=' + attr + ']'),
+				$group = $el.closest('.form-group');
+
+			$group.removeClass('has-error');
+			$group.find('.help-block').html('').addClass('hidden');
+		},
+		invalid: function (view, attr, error, selector) {
+			debugger
+			var $el = view.$('[name=' + attr + ']'),
+				$group = $el.closest('.form-group');
+
+			$group.addClass('has-error');
+			$group.find('.help-block').html(error).removeClass('hidden');
+		}
+	});
 });
 
 },{}],4:[function(require,module,exports){
@@ -217,12 +236,12 @@ App.Views.ArticleNewView = Backbone.View.extend({
 		let tag = this.$el.find('#tag').val();
 		let content = this.$el.find('#content').val();
 
+		debugger
 		let articleNew = new App.Models.ArticleModel({
 			title: title,
 			tag: tag,
 			content: content
 		})
-		debugger
 		console.log(articleNew.toJSON())
 		Backbone.Validation.bind(this, {model: articleNew})
 		let isValid = articleNew.isValid(true)
@@ -282,24 +301,39 @@ module.exports = `<article class="contenido_item">
     </div>
 </article>`
 },{}],11:[function(require,module,exports){
-module.exports = `<aside>
+module.exports = `<aside class="close">
                         <div id="aside_header">
                             <span aria-hidden="true" class="icon-arrow-down"></span>
                             <h3>New article</h3>
                         </div>
                         <div id="aside_body">
-                            <p>
-                                <input id="title" type="text" placeholder="Titulo" />
-                            </p>
-                                <p>
-                                <input id="tag" type="text" placeholder="Tag" />
-                            </p>
-                                <p>
-                                <input id="content" type="text" placeholder="Contenido" />
-                            </p>
-                                <p>
-                                <button id="create">Crear</button>
-                            </p>
+                                <form class="form-horizontal" role= "form" >
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <input type="text" placeholder="Title" class="form-control" id="title" name="title" />
+                                            <span class="help-block hidden"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <input type="text" placeholder="Tag" class="form-control" id="tag" name="tag" />
+                                            <span class="help-block hidden"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <input type="text" placeholder="Content" class="form-control" id="content" name="content" />
+                                            <span class="help-block hidden"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-10">
+                                            <button type="button" id="signUpButton" class="btn btn-success">Create</button>
+                                        </div>
+                                    </div>
+                            </form>
                         </div>
                     </aside>`
+
+
 },{}]},{},[1])

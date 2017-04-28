@@ -1,20 +1,34 @@
-module.exports = `<aside>
+module.exports = `<aside class="close">
                         <div id="aside_header">
                             <span aria-hidden="true" class="icon-arrow-down"></span>
                             <h3>New article</h3>
                         </div>
                         <div id="aside_body">
-                            <p>
-                                <input id="title" type="text" placeholder="Titulo" />
-                            </p>
-                                <p>
-                                <input id="tag" type="text" placeholder="Tag" />
-                            </p>
-                                <p>
-                                <input id="content" type="text" placeholder="Contenido" />
-                            </p>
-                                <p>
-                                <button id="create">Crear</button>
-                            </p>
+                                <form class="form-horizontal" role= "form" >
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <input type="text" placeholder="Title" class="form-control" id="title" name="title" />
+                                            <span class="help-block hidden"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <input type="text" placeholder="Tag" class="form-control" id="tag" name="tag" />
+                                            <span class="help-block hidden"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <input type="text" placeholder="Content" class="form-control" id="content" name="content" />
+                                            <span class="help-block hidden"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-10">
+                                            <button type="button" id="signUpButton" class="btn btn-success">Create</button>
+                                        </div>
+                                    </div>
+                            </form>
                         </div>
                     </aside>`
+

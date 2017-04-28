@@ -19,12 +19,12 @@ App.Views.ArticleNewView = Backbone.View.extend({
 		let tag = this.$el.find('#tag').val();
 		let content = this.$el.find('#content').val();
 
+		debugger
 		let articleNew = new App.Models.ArticleModel({
 			title: title,
 			tag: tag,
 			content: content
 		})
-		debugger
 		console.log(articleNew.toJSON())
 		Backbone.Validation.bind(this, {model: articleNew})
 		let isValid = articleNew.isValid(true)
