@@ -5,9 +5,13 @@ App.Views.ArticleNewView = Backbone.View.extend({
 		"click button" : "create",
 		"click #aside_header .icon-arrow-down": "toggle"
 	},
+	bindings: {
+		'#title': 'title',
+		'#tag': 'tag',
+		'#content': 'content'
+	},
 	className:"newArticle",
 	initialize : function(){
-		Backbone.Validation.bind(this)
 		this.template = Handlebars.compile(template);
 	},
 	toggle: function(){
@@ -15,29 +19,24 @@ App.Views.ArticleNewView = Backbone.View.extend({
 	},
 	create: function(){
 		
-		let title = this.$el.find('#title').val();
+		/*let title = this.$el.find('#title').val();
 		let tag = this.$el.find('#tag').val();
 		let content = this.$el.find('#content').val();
 
-		debugger
-		let articleNew = new App.Models.ArticleModel({
+		this.model.set({
 			title: title,
 			tag: tag,
 			content: content
-		})
-		console.log(articleNew.toJSON())
-		Backbone.Validation.bind(this, {model: articleNew})
-		let isValid = articleNew.isValid(true)
+		})*/
+		Backbone.Validation.bind(this, { model: this.model })
+		let isValid = this.model.isValid(true)
 		if(isValid){
-            articleNew.save();
-			this.$el.find('#title').val("");
-			this.$el.find('#tag').val("");
-			this.$el.find('#content').val("");
-		}else{
-			alert("ingrese los campos")
+            this.model.save();
+			this.model.set({ title: "", tag: "", content: ""});
 		}
 	},
 	render: function() {
 		this.$el.html(this.template());
+		this.stickit();
 	}
 });

@@ -1,5 +1,4 @@
 App.Collections.ArticleCollection = Backbone.Collection.extend({
-
     model: App.Models.ArticleModel,
     url: "/articles/all",
     getOne : function(id){

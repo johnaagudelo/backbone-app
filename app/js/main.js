@@ -17,10 +17,11 @@ $(document).ready(function () {
 	window.routers = new App.Routers.BaseRouter();
 
 	window.collections.articles.on('add', function (model) {
-		var view = new App.Views.ArticleView(model);
+		var view = new App.Views.ArticleView({model: model});
 		view.render();
 		view.$el.insertAfter('#contenido #add-article');
 	});
+
 	const xhr = $.get('/articles/all');
 
 	xhr.done(function (data) {

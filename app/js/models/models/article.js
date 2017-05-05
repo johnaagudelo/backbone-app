@@ -1,9 +1,9 @@
 App.Models.ArticleModel = Backbone.Model.extend({
 	url:"/articles",
 	defaults:{
-		title: "Title",
-		tag: "Tag",
-		content: "Contenido"
+		title: "",
+		tag: "",
+		content: ""
 	},
 	validation: {
 		title: {

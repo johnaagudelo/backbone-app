@@ -51,10 +51,11 @@ $(document).ready(function () {
 	window.routers = new App.Routers.BaseRouter();
 
 	window.collections.articles.on('add', function (model) {
-		var view = new App.Views.ArticleView(model);
+		var view = new App.Views.ArticleView({model: model});
 		view.render();
 		view.$el.insertAfter('#contenido #add-article');
 	});
+
 	const xhr = $.get('/articles/all');
 
 	xhr.done(function (data) {
@@ -71,7 +72,6 @@ $(document).ready(function () {
 
 	_.extend(Backbone.Validation.callbacks, {
 		valid: function (view, attr, selector) {
-			debugger
 			var $el = view.$('[name=' + attr + ']'),
 				$group = $el.closest('.form-group');
 
@@ -79,7 +79,6 @@ $(document).ready(function () {
 			$group.find('.help-block').html('').addClass('hidden');
 		},
 		invalid: function (view, attr, error, selector) {
-			debugger
 			var $el = view.$('[name=' + attr + ']'),
 				$group = $el.closest('.form-group');
 
@@ -91,7 +90,6 @@ $(document).ready(function () {
 
 },{}],4:[function(require,module,exports){
 App.Collections.ArticleCollection = Backbone.Collection.extend({
-
     model: App.Models.ArticleModel,
     url: "/articles/all",
     getOne : function(id){
@@ -107,9 +105,9 @@ App.Collections.ArticleCollection = Backbone.Collection.extend({
 App.Models.ArticleModel = Backbone.Model.extend({
 	url:"/articles",
 	defaults:{
-		title: "Title",
-		tag: "Tag",
-		content: "Contenido"
+		title: "",
+		tag: "",
+		content: ""
 	},
 	validation: {
 		title: {
@@ -164,9 +162,8 @@ App.Views.ArticleView = Backbone.View.extend({
 		"click .likes_down" : "downvote"
 	},
 	className: "article",
-	initialize : function(model){
+	initialize : function(){
 		let self = this;
-		this.model = model
 		this.model.on('change', function(){
 			self.render();
 		})
@@ -222,9 +219,13 @@ App.Views.ArticleNewView = Backbone.View.extend({
 		"click button" : "create",
 		"click #aside_header .icon-arrow-down": "toggle"
 	},
+	bindings: {
+		'#title': 'title',
+		'#tag': 'tag',
+		'#content': 'content'
+	},
 	className:"newArticle",
 	initialize : function(){
-		Backbone.Validation.bind(this)
 		this.template = Handlebars.compile(template);
 	},
 	toggle: function(){
@@ -232,30 +233,25 @@ App.Views.ArticleNewView = Backbone.View.extend({
 	},
 	create: function(){
 		
-		let title = this.$el.find('#title').val();
+		/*let title = this.$el.find('#title').val();
 		let tag = this.$el.find('#tag').val();
 		let content = this.$el.find('#content').val();
 
-		debugger
-		let articleNew = new App.Models.ArticleModel({
+		this.model.set({
 			title: title,
 			tag: tag,
 			content: content
-		})
-		console.log(articleNew.toJSON())
-		Backbone.Validation.bind(this, {model: articleNew})
-		let isValid = articleNew.isValid(true)
+		})*/
+		Backbone.Validation.bind(this, { model: this.model })
+		let isValid = this.model.isValid(true)
 		if(isValid){
-            articleNew.save();
-			this.$el.find('#title').val("");
-			this.$el.find('#tag').val("");
-			this.$el.find('#content').val("");
-		}else{
-			alert("ingrese los campos")
+            this.model.save();
+			this.model.set({ title: "", tag: "", content: ""});
 		}
 	},
 	render: function() {
 		this.$el.html(this.template());
+		this.stickit();
 	}
 });
 

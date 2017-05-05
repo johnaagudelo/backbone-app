@@ -8,9 +8,8 @@ App.Views.ArticleView = Backbone.View.extend({
 		"click .likes_down" : "downvote"
 	},
 	className: "article",
-	initialize : function(model){
+	initialize : function(){
 		let self = this;
-		this.model = model
 		this.model.on('change', function(){
 			self.render();
 		})
