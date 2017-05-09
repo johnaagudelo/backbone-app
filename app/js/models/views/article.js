@@ -5,12 +5,16 @@ App.Views.ArticleView = Backbone.View.extend({
 	events:{
 		"click > article": "navigate",
 		"click .likes_up" : "upvote",
-		"click .likes_down" : "downvote"
+		"click .likes_down" : "downvote",
+		"click #delete": "delete"
 	},
 	className: "article",
 	initialize : function(){
 		let self = this;
-		this.model.on('change', function(){
+		self.model.on('change', function(){
+			self.render();
+		})
+		self.model.on('destroy', function(){
 			self.render();
 		})
 		window.routers.on('route:root', function(){
@@ -19,8 +23,8 @@ App.Views.ArticleView = Backbone.View.extend({
 		window.routers.on('route:articleSingle', function(){
 			self.render();
 		});
-		this.template = Handlebars.compile(template);
-		this.templateExtended = Handlebars.compile(templeteExtend);
+		self.template = Handlebars.compile(template);
+		self.templateExtended = Handlebars.compile(templeteExtend);
 	},
 	navigate: function(ev){
 		Backbone.history.navigate('article/'+ this.model.get('id'), { trigger: true });
@@ -29,6 +33,15 @@ App.Views.ArticleView = Backbone.View.extend({
 		ev.stopPropagation();
 		let votes = this.model.get("votes");
 		this.model.set("votes", parseInt(votes, 10) + 1);
+	},
+	delete: function(ev){
+		debugger
+		console.log(this.model.toJSON())
+		this.model.destroy({
+			success: function(model, response){
+				window.collections.articles.remove(model);
+			}
+		})
 	},
 	downvote: function(ev){
 		ev.stopPropagation()

@@ -40,40 +40,30 @@ $(document).ready(function () {
 		window.collections.articles.add(article);
 	});
 
-	viewArticleNew = new App.Views.ArticleNewView({ model: new App.Models.ArticleModel() })
-	Backbone.Validation.bind(viewArticleNew)
-	viewArticleNew.render()
-	$('#add-article').html(viewArticleNew.el)
+	window.views.viewArticleNew = new App.Views.ArticleNewView({ model: new App.Models.ArticleModel() })
+	Backbone.Validation.bind(window.views.viewArticleNew)
+	window.views.viewArticleNew.render()
+	$('#add-article').html(window.views.viewArticleNew.el)
 
 	window.collections.articles = new App.Collections.ArticleCollection();
 	window.routers = new App.Routers.BaseRouter();
-
 	window.collections.articles.on('add', function (model) {
 		var view = new App.Views.ArticleView({ model: model });
 		view.render();
 		view.$el.insertAfter('#contenido #add-article');
 	});
 
-	/*const xhr = $.get('/articles/all');
-
-	xhr.done(function (data) {
-		data.forEach(function (article) {
-			window.collections.articles.add(new App.Models.ArticleModel(article))
-		});
-	})*/
-
-	Backbone.history.start({
-		root: '/',
-		pushState: false,
-		silent: true
-	})
-	debugger
 	window.collections.articles.fetch({
 		success: function(collectionArticle, response){
 			response.forEach(function (article) {
 				collectionArticle.add(new App.Models.ArticleModel(article))
 			});
 		}
+	});
+	Backbone.history.start({
+		root: '/',
+		pushState: false,
+		silent: true
 	})
 
 	_.extend(Backbone.Validation.callbacks, {
@@ -110,12 +100,14 @@ App.Collections.ArticleCollection = Backbone.Collection.extend({
 });
 },{}],5:[function(require,module,exports){
 App.Models.ArticleModel = Backbone.Model.extend({
-	url:"/articles",
+	urlRoot:"/articles/",
 	defaults:{
+		id: "",
 		title: "",
 		tag: "",
 		content: ""
 	},
+	idAttribute: "id",
 	validation: {
 		title: {
 			required: true,
@@ -131,11 +123,7 @@ App.Models.ArticleModel = Backbone.Model.extend({
 		}
 	},
 	parse : function(resp) {
-		if(resp.data){
-			return resp.data;
-		}else{
-			return resp;
-		}
+		return resp
 	}
 });
 },{}],6:[function(require,module,exports){
@@ -166,12 +154,16 @@ App.Views.ArticleView = Backbone.View.extend({
 	events:{
 		"click > article": "navigate",
 		"click .likes_up" : "upvote",
-		"click .likes_down" : "downvote"
+		"click .likes_down" : "downvote",
+		"click #delete": "delete"
 	},
 	className: "article",
 	initialize : function(){
 		let self = this;
-		this.model.on('change', function(){
+		self.model.on('change', function(){
+			self.render();
+		})
+		self.model.on('destroy', function(){
 			self.render();
 		})
 		window.routers.on('route:root', function(){
@@ -180,8 +172,8 @@ App.Views.ArticleView = Backbone.View.extend({
 		window.routers.on('route:articleSingle', function(){
 			self.render();
 		});
-		this.template = Handlebars.compile(template);
-		this.templateExtended = Handlebars.compile(templeteExtend);
+		self.template = Handlebars.compile(template);
+		self.templateExtended = Handlebars.compile(templeteExtend);
 	},
 	navigate: function(ev){
 		Backbone.history.navigate('article/'+ this.model.get('id'), { trigger: true });
@@ -190,6 +182,15 @@ App.Views.ArticleView = Backbone.View.extend({
 		ev.stopPropagation();
 		let votes = this.model.get("votes");
 		this.model.set("votes", parseInt(votes, 10) + 1);
+	},
+	delete: function(ev){
+		debugger
+		console.log(this.model.toJSON())
+		this.model.destroy({
+			success: function(model, response){
+				window.collections.articles.remove(model);
+			}
+		})
 	},
 	downvote: function(ev){
 		ev.stopPropagation()
@@ -241,7 +242,7 @@ App.Views.ArticleNewView = Backbone.View.extend({
 	create: function(){
 
 		Backbone.Validation.bind(this, { model: this.model })
-		let isValid = this.model.isValid(true)
+		let isValid = this.model.isValid()
 		if(isValid){
             this.model.save();
 			this.model.set({ title: "", tag: "", content: ""});
@@ -293,6 +294,7 @@ module.exports = `<article class="contenido_item">
             <a class="likes_down" href="#!"><span aria-hidden="true" class="icon-arrow-down"></span></a>
         </div>
     </div>
+    <div id="delete" class="close">x</div>
 </article>`
 },{}],11:[function(require,module,exports){
 module.exports = `<aside class="close">

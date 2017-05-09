@@ -160,6 +160,7 @@ header #header_titulo li {
   background-color: #fff;
   border: solid 1px #efefef;
   border-right: 4px solid #22bce0;
+  position: relative;
   float: left;
   height: 175px;
   margin: 1% 1% 0 0;
@@ -167,7 +168,13 @@ header #header_titulo li {
   width: 96%;
   transition: border-color 0.3s;
   -webkit-transition: border-color 0.3s;
+  .close{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+  }
 }
+
 #contenido .contenido_item figure {
   float: left;
   height: 175px;
@@ -285,7 +292,7 @@ header #header_titulo li {
     float: left;
     height: auto;
     margin: 0 1.5% 0 0;
-    width: 40%;
+    width: 47.5%;
   }
   #contenido aside:hover {
     height: auto;

@@ -1,10 +1,12 @@
 App.Models.ArticleModel = Backbone.Model.extend({
-	url:"/articles",
+	urlRoot:"/articles/",
 	defaults:{
+		id: "",
 		title: "",
 		tag: "",
 		content: ""
 	},
+	idAttribute: "id",
 	validation: {
 		title: {
 			required: true,
@@ -20,10 +22,6 @@ App.Models.ArticleModel = Backbone.Model.extend({
 		}
 	},
 	parse : function(resp) {
-		if(resp.data){
-			return resp.data;
-		}else{
-			return resp;
-		}
+		return resp
 	}
 });

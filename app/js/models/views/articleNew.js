@@ -20,7 +20,7 @@ App.Views.ArticleNewView = Backbone.View.extend({
 	create: function(){
 
 		Backbone.Validation.bind(this, { model: this.model })
-		let isValid = this.model.isValid(true)
+		let isValid = this.model.isValid()
 		if(isValid){
             this.model.save();
 			this.model.set({ title: "", tag: "", content: ""});

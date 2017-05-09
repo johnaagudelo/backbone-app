@@ -15,4 +15,5 @@ module.exports = `<article class="contenido_item">
             <a class="likes_down" href="#!"><span aria-hidden="true" class="icon-arrow-down"></span></a>
         </div>
     </div>
+    <div id="delete" class="close">x</div>
 </article>`

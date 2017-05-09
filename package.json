@@ -1,7 +1,7 @@
 {
   "name": "Backboneapp",
   "version": "1.0.0",
-  "description": "Proyecto creado con FW backbone, engine templete Handlebars, gulp, broserify, yarn, sockets",
+  "description": "Proyecto creado con backbone, engine templete Handlebars, gulp, broserify, yarn, sockets",
   "main": "index.js",
   "repository": "https://github.com/johnaagudelo/backbone-app.git",
   "author": "John Alexander Agudelo Galeano",
@@ -14,8 +14,6 @@
     "swig": "~0.13.5"
   },
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-bb-generate": "~0.1.5",
     "gulp-browserify": "^0.5.1",
     "gulp-copy": "^1.0.0",
     "gulp-filter": "^5.0.0",

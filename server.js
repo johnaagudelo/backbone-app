@@ -61,6 +61,14 @@ app.put('/articles/:id', function (req, res) {
 	res.send('put')
 });
 
+app.delete('/articles/:id', function(req, res){
+	var articles = data.filter(function(article){
+		return data.id != req.params.id
+	});
+	data = articles;
+	res.send(200, {status: 'ok' });
+})
+
 var home = function (req, res) {
 	res.render('index', {
 		posts: data
