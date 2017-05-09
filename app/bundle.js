@@ -27,7 +27,6 @@ App.Routers = {};
 //Mantener las definicones de la aplicacion (Objetos en tiempior de jecucion de la app) 
 window.app = {};
 window.routers = {};
-window.plugs = {};
 window.views = {};
 window.collections = {};
 
@@ -40,7 +39,6 @@ $(document).ready(function () {
 	socket.on('articles::create', function (article) {
 		window.collections.articles.add(article);
 	});
-	debugger
 
 	viewArticleNew = new App.Views.ArticleNewView({ model: new App.Models.ArticleModel() })
 	Backbone.Validation.bind(viewArticleNew)
@@ -51,23 +49,31 @@ $(document).ready(function () {
 	window.routers = new App.Routers.BaseRouter();
 
 	window.collections.articles.on('add', function (model) {
-		var view = new App.Views.ArticleView({model: model});
+		var view = new App.Views.ArticleView({ model: model });
 		view.render();
 		view.$el.insertAfter('#contenido #add-article');
 	});
 
-	const xhr = $.get('/articles/all');
+	/*const xhr = $.get('/articles/all');
 
 	xhr.done(function (data) {
 		data.forEach(function (article) {
 			window.collections.articles.add(new App.Models.ArticleModel(article))
 		});
-	})
+	})*/
 
 	Backbone.history.start({
 		root: '/',
 		pushState: false,
 		silent: true
+	})
+	debugger
+	window.collections.articles.fetch({
+		success: function(collectionArticle, response){
+			response.forEach(function (article) {
+				collectionArticle.add(new App.Models.ArticleModel(article))
+			});
+		}
 	})
 
 	_.extend(Backbone.Validation.callbacks, {
@@ -98,7 +104,8 @@ App.Collections.ArticleCollection = Backbone.Collection.extend({
         });
     },
     parse : function(resp) {
-        return resp.data;
+        debugger
+        return resp;
     }
 });
 },{}],5:[function(require,module,exports){
@@ -232,16 +239,7 @@ App.Views.ArticleNewView = Backbone.View.extend({
 		$('.newArticle aside').toggleClass('close')
 	},
 	create: function(){
-		
-		/*let title = this.$el.find('#title').val();
-		let tag = this.$el.find('#tag').val();
-		let content = this.$el.find('#content').val();
 
-		this.model.set({
-			title: title,
-			tag: tag,
-			content: content
-		})*/
 		Backbone.Validation.bind(this, { model: this.model })
 		let isValid = this.model.isValid(true)
 		if(isValid){

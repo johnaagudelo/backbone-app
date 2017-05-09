@@ -7,6 +7,7 @@ App.Collections.ArticleCollection = Backbone.Collection.extend({
         });
     },
     parse : function(resp) {
-        return resp.data;
+        debugger
+        return resp;
     }
 });
