@@ -24,8 +24,9 @@
     "main-bower-files": "^2.13.1"
   },
   "scripts": {
-    "start": "gulp build & node server.js",
-    "server": "node server.js"
+    "start": "gulp build & gulp bundle & node server.js",
+    "server": "node server.js",
+    "bundle": "gulp bundle"
   },
   "license": "MIT"
 }

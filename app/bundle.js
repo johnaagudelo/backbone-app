@@ -1,8 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/*require('./vendor/backbone.js')
-require('./vendor/underscore.js')
-require('./vendor/handlebars-v4.0.5.js')*/
- 
 require('./init.js')
 // App Models
 require('./models/models/article.js')
@@ -48,6 +44,7 @@ $(document).ready(function () {
 	window.collections.articles = new App.Collections.ArticleCollection();
 	window.routers = new App.Routers.BaseRouter();
 	window.collections.articles.on('add', function (model) {
+		debugger;
 		var view = new App.Views.ArticleView({ model: model });
 		view.render();
 		view.$el.insertAfter('#contenido #add-article');
@@ -60,54 +57,37 @@ $(document).ready(function () {
 			});
 		}
 	});
+
 	Backbone.history.start({
 		root: '/',
 		pushState: false,
 		silent: true
 	})
-
-	_.extend(Backbone.Validation.callbacks, {
-		valid: function (view, attr, selector) {
-			var $el = view.$('[name=' + attr + ']'),
-				$group = $el.closest('.form-group');
-
-			$group.removeClass('has-error');
-			$group.find('.help-block').html('').addClass('hidden');
-		},
-		invalid: function (view, attr, error, selector) {
-			var $el = view.$('[name=' + attr + ']'),
-				$group = $el.closest('.form-group');
-
-			$group.addClass('has-error');
-			$group.find('.help-block').html(error).removeClass('hidden');
-		}
-	});
+	
 });
 
 },{}],4:[function(require,module,exports){
 App.Collections.ArticleCollection = Backbone.Collection.extend({
+    url: "/articles",
     model: App.Models.ArticleModel,
-    url: "/articles/all",
     getOne : function(id){
         return this.filter(function(data) {
             return data.get("id") == id;
         });
     },
     parse : function(resp) {
-        debugger
         return resp;
     }
 });
 },{}],5:[function(require,module,exports){
 App.Models.ArticleModel = Backbone.Model.extend({
-	urlRoot:"/articles/",
+	urlRoot:"/articles",
 	defaults:{
-		id: "",
 		title: "",
 		tag: "",
 		content: ""
 	},
-	idAttribute: "id",
+	//idAttribute: "id",
 	validation: {
 		title: {
 			required: true,
@@ -152,7 +132,7 @@ let templeteExtend = require('../../templates/article-extended.js')
 
 App.Views.ArticleView = Backbone.View.extend({
 	events:{
-		"click > article": "navigate",
+		"click .icon-heart-2": "navigate",
 		"click .likes_up" : "upvote",
 		"click .likes_down" : "downvote",
 		"click #delete": "delete"
@@ -160,18 +140,12 @@ App.Views.ArticleView = Backbone.View.extend({
 	className: "article",
 	initialize : function(){
 		let self = this;
-		self.model.on('change', function(){
-			self.render();
-		})
-		self.model.on('destroy', function(){
-			self.render();
-		})
-		window.routers.on('route:root', function(){
-			self.render();
-		});
-		window.routers.on('route:articleSingle', function(){
-			self.render();
-		});
+		self.model.bind("destroy", this.close, this);
+		self.model.on('change', this.render, this);
+
+		window.routers.on('route:root', this.render, this);
+		window.routers.on('route:articleSingle', this.render, this);
+
 		self.template = Handlebars.compile(template);
 		self.templateExtended = Handlebars.compile(templeteExtend);
 	},
@@ -183,14 +157,14 @@ App.Views.ArticleView = Backbone.View.extend({
 		let votes = this.model.get("votes");
 		this.model.set("votes", parseInt(votes, 10) + 1);
 	},
+	close:function () {
+        $(this.el).unbind();
+        $(this.el).remove();
+    },
 	delete: function(ev){
 		debugger
 		console.log(this.model.toJSON())
-		this.model.destroy({
-			success: function(model, response){
-				window.collections.articles.remove(model);
-			}
-		})
+		this.model.destroy();
 	},
 	downvote: function(ev){
 		ev.stopPropagation()
@@ -223,8 +197,10 @@ App.Views.ArticleView = Backbone.View.extend({
 let template = require('../../templates/articleNew.js')
 
 App.Views.ArticleNewView = Backbone.View.extend({
-	events:{
-		"click button" : "create",
+	className: "newArticle",
+	model: App.Models.ArticleModel,
+	events: {
+		"click button": "create",
 		"click #aside_header .icon-arrow-down": "toggle"
 	},
 	bindings: {
@@ -232,23 +208,43 @@ App.Views.ArticleNewView = Backbone.View.extend({
 		'#tag': 'tag',
 		'#content': 'content'
 	},
-	className:"newArticle",
-	initialize : function(){
+	initialize: function () {
 		this.template = Handlebars.compile(template);
 	},
-	toggle: function(){
+	toggle: function () {
 		$('.newArticle aside').toggleClass('close')
 	},
-	create: function(){
-
-		Backbone.Validation.bind(this, { model: this.model })
-		let isValid = this.model.isValid()
-		if(isValid){
-            this.model.save();
-			this.model.set({ title: "", tag: "", content: ""});
+	create: function () {
+		debugger
+		Backbone.Validation.bind(this, {
+			model: this.model
+		});
+		let isValid = this.model.isValid(true)
+		if (isValid) {
+			//window.collections.articles.create(this.model);
+			this.model.save();
+			//this.model.set({ title: "", tag: "", content: "" });
 		}
 	},
-	render: function() {
+	render: function () {
+		Backbone.Validation.bind(this, {
+			valid: function (view, attr) {
+				debugger
+				var $el = view.$('[name=' + attr + ']'),
+					$group = $el.closest('.form-group');
+
+				$group.removeClass('has-error');
+				$group.find('.help-block').html('').addClass('hidden');
+			},
+			invalid: function (view, attr, error) {
+				debugger
+				var $el = view.$('[name=' + attr + ']'),
+					$group = $el.closest('.form-group');
+
+				$group.addClass('has-error');
+				$group.find('.help-block').html(error).removeClass('hidden');
+			}
+		});
 		this.$el.html(this.template());
 		this.stickit();
 	}
@@ -306,19 +302,19 @@ module.exports = `<aside class="close">
                                 <form class="form-horizontal" role= "form" >
                                     <div class="form-group">
                                         <div class="col-lg-12">
-                                            <input type="text" placeholder="Title" class="form-control" id="title" name="title" />
+                                            <input type="text" placeholder="Title" class="form-control" id="title" />
                                             <span class="help-block hidden"></span>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="col-lg-12">
-                                            <input type="text" placeholder="Tag" class="form-control" id="tag" name="tag" />
+                                            <input type="text" placeholder="Tag" class="form-control" id="tag" />
                                             <span class="help-block hidden"></span>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="col-lg-12">
-                                            <input type="text" placeholder="Content" class="form-control" id="content" name="content" />
+                                            <input type="text" placeholder="Content" class="form-control" id="content" />
                                             <span class="help-block hidden"></span>
                                         </div>
                                     </div>

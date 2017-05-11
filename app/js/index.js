@@ -1,7 +1,3 @@
-/*require('./vendor/backbone.js')
-require('./vendor/underscore.js')
-require('./vendor/handlebars-v4.0.5.js')*/
- 
 require('./init.js')
 // App Models
 require('./models/models/article.js')

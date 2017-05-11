@@ -26,7 +26,7 @@ app.use(express.cookieParser())
 app.use(express.methodOverride())
 
 // Routes
-app.get('/articles/all', function (req, res) {
+app.get('/articles', function (req, res) {
 	res.send(data);
 });
 
@@ -62,11 +62,12 @@ app.put('/articles/:id', function (req, res) {
 });
 
 app.delete('/articles/:id', function(req, res){
+
 	var articles = data.filter(function(article){
-		return data.id != req.params.id
+		return article.id != req.params.id
 	});
 	data = articles;
-	res.send(200, {status: 'ok' });
+	res.send(200, {status: 'ok'});
 })
 
 var home = function (req, res) {
@@ -76,7 +77,7 @@ var home = function (req, res) {
 };
 
 app.get('/', home)
-app.get('/article/:id', home)
+app.get('/articles/:id', home)
 
 // Static files
 app.use(express.static('./app'))

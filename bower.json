@@ -1,5 +1,5 @@
 {
-  "name": "Backbone app",
+  "name": "backboneapp",
   "version": "1.0.0",
   "homepage": "https://github.com/johnaagudelo/backbone-app",
   "authors": [
@@ -21,7 +21,7 @@
     "tests"
   ],
   "dependencies": {
-    "backbone-validation": "~0.11.5",
+    "backbone.validation": "backbone-validation#^0.11.5",
     "backbone": "~1.3.3",
     "underscore": "~1.8.3",
     "jquery": "~3.2.1",

@@ -3,7 +3,7 @@ let templeteExtend = require('../../templates/article-extended.js')
 
 App.Views.ArticleView = Backbone.View.extend({
 	events:{
-		"click > article": "navigate",
+		"click .icon-heart-2": "navigate",
 		"click .likes_up" : "upvote",
 		"click .likes_down" : "downvote",
 		"click #delete": "delete"
@@ -11,18 +11,12 @@ App.Views.ArticleView = Backbone.View.extend({
 	className: "article",
 	initialize : function(){
 		let self = this;
-		self.model.on('change', function(){
-			self.render();
-		})
-		self.model.on('destroy', function(){
-			self.render();
-		})
-		window.routers.on('route:root', function(){
-			self.render();
-		});
-		window.routers.on('route:articleSingle', function(){
-			self.render();
-		});
+		self.model.bind("destroy", this.close, this);
+		self.model.on('change', this.render, this);
+
+		window.routers.on('route:root', this.render, this);
+		window.routers.on('route:articleSingle', this.render, this);
+
 		self.template = Handlebars.compile(template);
 		self.templateExtended = Handlebars.compile(templeteExtend);
 	},
@@ -34,14 +28,14 @@ App.Views.ArticleView = Backbone.View.extend({
 		let votes = this.model.get("votes");
 		this.model.set("votes", parseInt(votes, 10) + 1);
 	},
+	close:function () {
+        $(this.el).unbind();
+        $(this.el).remove();
+    },
 	delete: function(ev){
 		debugger
 		console.log(this.model.toJSON())
-		this.model.destroy({
-			success: function(model, response){
-				window.collections.articles.remove(model);
-			}
-		})
+		this.model.destroy();
 	},
 	downvote: function(ev){
 		ev.stopPropagation()
